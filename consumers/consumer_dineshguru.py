@@ -35,7 +35,9 @@ from consumers.db_sqlite_case import init_db, insert_message
 
 # Store data for visualizations
 author_counts = Counter()
+message_timestamps = []
 category_counts = Counter()
+
 
 # CSV file for storing positive messages
 positive_messages_file = "positive_messages.csv"
@@ -53,19 +55,18 @@ def update_visualizations():
     ax1.clear()
     ax2.clear()
 
-    # Bar Chart for Author Message Count
+    # Pie Chart for Category Distribution
+    if category_counts:
+        categories, counts = zip(*category_counts.items())
+        ax1.pie(counts, labels=categories, autopct='%1.1f%%', startangle=90)
+        ax1.set_title("Category Distribution")
+    # Bar Chart for Author Message Count    
     if author_counts:
         authors, counts = zip(*author_counts.most_common())
-        ax1.bar(authors, counts, color='skyblue')
-        ax1.set_title("Messages Per Author")
-        ax1.set_ylabel("Message Count")
-        ax1.set_xticklabels(authors, rotation=45, ha="right")
-
-    # Pie Chart for Category Distribution
-    #if category_counts:
-        #categories, counts = zip(*category_counts.items())
-        #ax2.pie(counts, labels=categories, autopct='%1.1f%%', startangle=90)
-        #ax2.set_title("Category Distribution")
+        ax2.bar(authors, counts, color='blue')
+        ax2.set_title("Messages Per Author")
+        ax2.set_ylabel("Message Count")
+        ax2.set_xticklabels(authors, rotation=45, ha="right")
 
     # Draw updated plots
     plt.tight_layout()
